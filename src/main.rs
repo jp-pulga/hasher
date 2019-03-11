@@ -10,7 +10,7 @@ fn main() {
             let mut hasher = sha3_utils::sha_512();
 
             // write input message
-            hasher.input(&input.as_bytes()[0 .. input.len() - 1]);
+            hasher.input(&input.as_bytes()[0..input.chars().count() - 1]);
 
             for byte in hasher.result() {
                 print!("{:02x}", byte);
