@@ -1,23 +1,47 @@
-use sha3::Digest;
-use std::io;
+use clap::{App, Arg};
+use digest::Digest;
+use sha3;
+use std::io::*;
 
-mod sha3_utils;
+fn hash_and_print<D: Digest>(to_hash: &str) {
+    let mut hasher = D::new();
+    hasher.input(to_hash.as_bytes());
+
+    for byte in hasher.result() {
+        print!("{:02x}", byte);
+    }
+}
 
 fn main() {
-    let mut input = String::new();
-    match io::stdin().read_line(&mut input) {
-        Ok(_) => {
-            let mut hasher = sha3_utils::sha_512();
+    let matches = App::new("Hasher - Simple hash tool")
+        .version("0.0.1")
+        .author("João Paulo Pulga <pulgovisk@protonmail.com>")
+        .about("Hash tool made with rust")
+        .arg(
+            Arg::with_name("hash")
+                .short("-h")
+                .long("hash")
+                .value_name("Hash type")
+                .long_help(
+"The supported list of hashes is
+Sha3:
+    sha3_224: Sha3 224 implementation
+    sha3_256: Sha3 256 implementation
+    sha3_384: Sha3 384 implementation
+    sha3_512: Sha3 512 implementation")
+                .takes_value(true),
+        )
+        .get_matches();
 
-            // write input message
-            hasher.input(&input.as_bytes()[0..input.chars().count() - 1]);
-
-            for byte in hasher.result() {
-                print!("{:02x}", byte);
-            }
-
-            println!("");
+    let stdin = stdin();
+    for line in stdin.lock().lines() {
+        match matches.value_of("hash").unwrap_or("sha3_512") {
+            "sha3_224" => hash_and_print::<sha3::Sha3_224>(&line.unwrap()),
+            "sha3_256" => hash_and_print::<sha3::Sha3_256>(&line.unwrap()),
+            "sha3_384" => hash_and_print::<sha3::Sha3_384>(&line.unwrap()),
+            _ => hash_and_print::<sha3::Sha3_512>(&line.unwrap()),
         }
-        Err(err) => println!("error: {}", err),
     }
+
+    println!("");
 }
