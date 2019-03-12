@@ -1,6 +1,8 @@
 use clap::{App, Arg};
 use digest::Digest;
 use sha3;
+use ripemd160;
+use ripemd320;
 use std::io::*;
 
 fn hash_and_print<D: Digest>(to_hash: &str) {
@@ -25,10 +27,14 @@ fn main() {
                 .long_help(
 "The supported list of hashes is
 Sha3:
-    sha3_224: Sha3 224 implementation
-    sha3_256: Sha3 256 implementation
-    sha3_384: Sha3 384 implementation
-    sha3_512: Sha3 512 implementation")
+    sha3_224
+    sha3_256
+    sha3_384
+    sha3_512
+    
+ripemd:
+    ripemd160
+    ripemd320")
                 .takes_value(true),
         )
         .get_matches();
@@ -36,9 +42,14 @@ Sha3:
     let stdin = stdin();
     for line in stdin.lock().lines() {
         match matches.value_of("hash").unwrap_or("sha3_512") {
+            // Sha3
             "sha3_224" => hash_and_print::<sha3::Sha3_224>(&line.unwrap()),
             "sha3_256" => hash_and_print::<sha3::Sha3_256>(&line.unwrap()),
             "sha3_384" => hash_and_print::<sha3::Sha3_384>(&line.unwrap()),
+
+            //ripemd
+            "ripemd160" => hash_and_print::<ripemd160::Ripemd160>(&line.unwrap()),
+            "ripemd320" => hash_and_print::<ripemd320::Ripemd320>(&line.unwrap()),
             _ => hash_and_print::<sha3::Sha3_512>(&line.unwrap()),
         }
     }
