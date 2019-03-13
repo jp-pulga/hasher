@@ -1,8 +1,5 @@
 use clap::{App, Arg};
 use digest::Digest;
-use ripemd160;
-use ripemd320;
-use sha3;
 use std::io::*;
 
 fn hash_and_print<D: Digest>(to_hash: String) {
@@ -15,16 +12,32 @@ fn hash_and_print<D: Digest>(to_hash: String) {
 }
 
 fn match_hash(hash : &str, to_hash: String) {
+    use ripemd160;
+    use ripemd320;
+    use sha3;
+    use md2;
+    use md4;
+    use md5;
+    use whirlpool;
+
     match hash {
         // Sha3
         "sha3_224" => hash_and_print::<sha3::Sha3_224>(to_hash),
         "sha3_256" => hash_and_print::<sha3::Sha3_256>(to_hash),
         "sha3_384" => hash_and_print::<sha3::Sha3_384>(to_hash),
+        "sha3_512" => hash_and_print::<sha3::Sha3_512>(to_hash),
+
+        //streebog
+        "whirlpool" => hash_and_print::<whirlpool::Whirlpool>(to_hash),
 
         //ripemd
         "ripemd160" => hash_and_print::<ripemd160::Ripemd160>(to_hash),
         "ripemd320" => hash_and_print::<ripemd320::Ripemd320>(to_hash),
-        _ => hash_and_print::<sha3::Sha3_512>(to_hash),
+
+        //md
+        "md2" => hash_and_print::<md2::Md2>(to_hash),
+        "md4" => hash_and_print::<md4::Md4>(to_hash),
+        _ => hash_and_print::<md5::Md5>(to_hash),
     }
 }
 
@@ -45,21 +58,31 @@ Sha3:
     sha3_256
     sha3_384
     sha3_512
-    
+
+md:
+    md2
+    md4
+    md5
+
 ripemd:
     ripemd160
-    ripemd320",
+    ripemd320
+
+Whirlpool:
+    whirlpool
+    
+The default hash algorithm is md5",
                 )
                 .takes_value(true),
         )
-        .arg(Arg::with_name("hide").long("hide"))
+        .arg(Arg::with_name("hide").long("hide").help("hide input from terminal"))
         .get_matches();
 
     let hash = matches.value_of("hash").unwrap_or("sha3_512");
 
     if matches.is_present("hide") {
         use rpassword;
-        
+
         match_hash(hash, rpassword::read_password().unwrap());
     } else {
         let stdin = stdin();

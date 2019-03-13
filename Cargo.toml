@@ -8,8 +8,13 @@ edition = "2018"
 sha3 = "0.8.1"
 ripemd160 = "0.8.0"
 ripemd320 = "0.8.0"
+md2 = "*"
+md4 = "*"
+md-5 = "*"
+whirlpool = "*"
 digest = "*"
 rpassword = "*"
+
 
 [dependencies.clap]
 version = "2.32"
