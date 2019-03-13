@@ -59,7 +59,7 @@ ripemd:
 
     if matches.is_present("hide") {
         use rpassword;
-
+        
         match_hash(hash, rpassword::read_password().unwrap());
     } else {
         let stdin = stdin();
