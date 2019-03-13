@@ -9,10 +9,9 @@ sha3 = "0.8.1"
 ripemd160 = "0.8.0"
 ripemd320 = "0.8.0"
 digest = "*"
+rpassword = "*"
 
 [dependencies.clap]
 version = "2.32"
 default-features = false
-
-# Cherry-pick the features you'd like to use
 features = [ "suggestions", "color" ]
