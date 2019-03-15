@@ -5,9 +5,10 @@ authors = ["pulga"]
 edition = "2018"
 
 [dependencies]
-sha3 = "0.8.1"
-ripemd160 = "0.8.0"
-ripemd320 = "0.8.0"
+sha2 = "*"
+sha3 = "*"
+ripemd160 = "*"
+ripemd320 = "*"
 md2 = "*"
 md4 = "*"
 md-5 = "*"

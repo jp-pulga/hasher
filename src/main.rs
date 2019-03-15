@@ -3,7 +3,12 @@ use digest::Digest;
 use std::io;
 use std::str::FromStr;
 
+#[derive(Debug)]
 enum HashType {
+    Sha2_224,
+    Sha2_256,
+    Sha2_384,
+    Sha2_512,
     Sha3_224,
     Sha3_256,
     Sha3_384,
@@ -21,6 +26,10 @@ impl FromStr for HashType {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
+            "sha2_224" => Ok(HashType::Sha2_224),
+            "sha2_256" => Ok(HashType::Sha2_256),
+            "sha2_384" => Ok(HashType::Sha2_384),
+            "sha2_512" => Ok(HashType::Sha2_512),
             "sha3_224" => Ok(HashType::Sha3_224),
             "sha3_256" => Ok(HashType::Sha3_256),
             "sha3_384" => Ok(HashType::Sha3_384),
@@ -51,10 +60,17 @@ fn match_hash(hash: &HashType, to_hash: String) {
     use md5;
     use ripemd160;
     use ripemd320;
+    use sha2;
     use sha3;
     use whirlpool;
 
     match hash {
+        // Sha2
+        HashType::Sha2_224 => hash_and_print::<sha2::Sha224>(to_hash),
+        HashType::Sha2_256 => hash_and_print::<sha2::Sha256>(to_hash),
+        HashType::Sha2_384 => hash_and_print::<sha2::Sha384>(to_hash),
+        HashType::Sha2_512 => hash_and_print::<sha2::Sha512>(to_hash),
+
         // Sha3
         HashType::Sha3_224 => hash_and_print::<sha3::Sha3_224>(to_hash),
         HashType::Sha3_256 => hash_and_print::<sha3::Sha3_256>(to_hash),
@@ -81,12 +97,16 @@ fn main() {
         .author("João Paulo Pulga <pulgovisk@protonmail.com>")
         .about("Hash tool made with rust")
         .arg(
-            Arg::with_name("hash")
+            Arg::with_name("algorithm")
                 .short("a")
                 .long("algorithm")
                 .value_name("type")
                 .takes_value(true)
                 .possible_values(&[
+                    "sha2_224",
+                    "sha2_256",
+                    "sha2_384",
+                    "sha2_512",
                     "sha3_224",
                     "sha3_256",
                     "sha3_384",
@@ -106,7 +126,7 @@ fn main() {
         )
         .get_matches();
 
-    let hash = value_t!(matches, "algorithm", HashType).unwrap_or(HashType::Md5);
+    let hash = value_t!(matches, "algorithm", HashType).unwrap_or(HashType::Md5);    
 
     if matches.is_present("hide") {
         use rpassword;
