@@ -13,7 +13,7 @@ USAGE:
 
 FLAGS:
     -h, --help       Prints help information
-        --hide       hide input from terminal
+        --hide       Hide input from terminal
     -V, --version    Prints version information
 
 OPTIONS:
