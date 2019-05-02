@@ -122,7 +122,7 @@ fn main() {
         .arg(
             Arg::with_name("hide")
                 .long("hide")
-                .help("hide input from terminal"),
+                .help("Hide input from terminal"),
         )
         .get_matches();
 
