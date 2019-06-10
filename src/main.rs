@@ -83,52 +83,55 @@ fn match_hash(hash: &HashType, to_hash: String) {
 }
 
 fn main() {
-	let matches = App::new("Hasher - Simple hash tool")
-		.version("0.0.1")
-		.author("João Paulo Pulga <pulgovisk@protonmail.com>")
-		.about("Hash tool made with rust")
-		.arg(
-			Arg::with_name("algorithm")
-				.short("a")
-				.long("algorithm")
-				.value_name("type")
-				.takes_value(true)
-				.possible_values(&[
-					"sha2_224",
-					"sha2_256",
-					"sha2_384",
-					"sha2_512",
-					"sha3_224",
-					"sha3_256",
-					"sha3_384",
-					"sha3_512",
-					"md2",
-					"md4",
-					"md5",
-					"ripemd160",
-					"ripemd320",
-					"whirlpool",
-				]),
-		)
-		.arg(
-			Arg::with_name("hide")
-				.long("hide")
-				.help("hide input from terminal"),
-		)
-		.get_matches();
+    let matches = App::new("Hasher - Simple hash tool")
+        .version("0.0.1")
+        .author("João Paulo Pulga <pulgovisk@protonmail.com>")
+        .about("Hash tool made with rust")
+        .arg(
+            Arg::with_name("algorithm")
+                .short("a")
+                .long("algorithm")
+                .value_name("type")
+                .takes_value(true)
+                .possible_values(&[
+                    "sha2_224",
+                    "sha2_256",
+                    "sha2_384",
+                    "sha2_512",
+                    "sha3_224",
+                    "sha3_256",
+                    "sha3_384",
+                    "sha3_512",
+                    "md2",
+                    "md4",
+                    "md5",
+                    "ripemd160",
+                    "ripemd320",
+                    "whirlpool",
+                ]),
+        )
+        .arg(
+            Arg::with_name("hide")
+                .long("hide")
+                .help("Hide input from terminal"),
+        )
+        .get_matches();
 
-	let hash = value_t!(matches, "algorithm", HashType).unwrap_or(HashType::Md5);
+    let hash = value_t!(matches, "algorithm", HashType).unwrap_or(HashType::Md5);    
 
-	if matches.is_present("hide") {
-		match_hash(&hash, rpassword::read_password().unwrap());
-	} else {
-		use std::io::BufRead;
-
-		let stdin = io::stdin();
-		for line in stdin.lock().lines() {
-			match_hash(&hash, line.unwrap());
+    if matches.is_present("hide") {
+		loop {
+        	match_hash(&hash, rpassword::read_password().unwrap());
+			println!("");
 		}
-	}
+    } else {
+        use std::io::BufRead;
 
-	println!("");
+        let stdin = io::stdin();
+        for line in stdin.lock().lines() {
+            match_hash(&hash, line.unwrap());
+        }
+    }
+
+    println!("");
 }
