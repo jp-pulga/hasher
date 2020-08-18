@@ -18,7 +18,7 @@ enum HashType {
 	Ripemd320,
 	Md2,
 	Md4,
-	Md5,
+	Md5
 }
 
 impl FromStr for HashType {
@@ -54,7 +54,7 @@ fn hash_and_print<D: Digest>(to_hash: String) {
 	}
 }
 
-fn match_hash(hash: &HashType, to_hash: String) {
+fn match_hash_and_print(hash: &HashType, to_hash: String) {
 	match hash {
 		// Sha2
 		HashType::Sha2_224 => hash_and_print::<sha2::Sha224>(to_hash),
@@ -110,28 +110,16 @@ fn main() {
                     "whirlpool",
                 ]),
         )
-        .arg(
-            Arg::with_name("hide")
-                .long("hide")
-                .help("Hide input from terminal"),
-        )
         .get_matches();
 
     let hash = value_t!(matches, "algorithm", HashType).unwrap_or(HashType::Md5);    
 
-    if matches.is_present("hide") {
-		loop {
-        	match_hash(&hash, rpassword::read_password().unwrap());
-			println!("");
-		}
-    } else {
-        use std::io::BufRead;
+	use std::io::BufRead;
 
-        let stdin = io::stdin();
-        for line in stdin.lock().lines() {
-            match_hash(&hash, line.unwrap());
-        }
-    }
+	let stdin = io::stdin();
+	for line in stdin.lock().lines() {
+		match_hash_and_print(&hash, line.unwrap());
+	}
 
     println!("");
 }
