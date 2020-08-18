@@ -92,7 +92,8 @@ fn main() {
                 .short("a")
                 .long("algorithm")
                 .value_name("type")
-                .takes_value(true)
+				.takes_value(true)
+				.default_value("md5")
                 .possible_values(&[
                     "sha2_224",
                     "sha2_256",
