@@ -2,7 +2,7 @@
 name = "hasher"
 version = "0.1.0"
 authors = ["pulga"]
-edition = "2018"
+edition = "2021"
 
 [dependencies]
 sha2 = "*"
