@@ -46,10 +46,7 @@ impl FromStr for HashType {
 }
 
 fn hash_and_print<D: Digest>(to_hash: String) {
-	let mut hasher = D::new();
-	hasher.input(to_hash.as_bytes());
-
-	for byte in hasher.result() {
+	for byte in <D as Digest>::digest(to_hash.as_bytes()) {
 		print!("{:02x}", byte);
 	}
 }
@@ -72,8 +69,8 @@ fn match_hash_and_print(hash: &HashType, to_hash: String) {
 		HashType::Whirlpool => hash_and_print::<whirlpool::Whirlpool>(to_hash),
 
 		//ripemd
-		HashType::Ripemd160 => hash_and_print::<ripemd160::Ripemd160>(to_hash),
-		HashType::Ripemd320 => hash_and_print::<ripemd320::Ripemd320>(to_hash),
+		HashType::Ripemd160 => hash_and_print::<ripemd::Ripemd160>(to_hash),
+		HashType::Ripemd320 => hash_and_print::<ripemd::Ripemd320>(to_hash),
 
 		//md
 		HashType::Md2 => hash_and_print::<md2::Md2>(to_hash),
