@@ -46,7 +46,7 @@ impl FromStr for HashType {
 }
 
 fn hash_and_print<D: Digest>(to_hash: String) {
-	for byte in <D as Digest>::digest(to_hash.as_bytes()) {
+	for byte in D::digest(to_hash.as_bytes()) {
 		print!("{:02x}", byte);
 	}
 }
